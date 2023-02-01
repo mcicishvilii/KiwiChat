@@ -1,4 +1,4 @@
-package com.example.kiwichat
+package com.example.kiwichat.ui.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
