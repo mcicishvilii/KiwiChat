@@ -1,7 +1,7 @@
-package com.example.kiwichat
+package com.example.kiwichat.ui.chat
 
 import androidx.lifecycle.ViewModel
 
-class MainViewModel : ViewModel() {
+class ChatViewModel : ViewModel() {
     // TODO: Implement the ViewModel
 }

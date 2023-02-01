@@ -10,6 +10,7 @@ import com.example.kiwichat.common.BaseFragment
 import com.example.kiwichat.data.User
 import com.example.kiwichat.databinding.FragmentMainBinding
 import com.example.kiwichat.ui.adapters.UsersAdapter
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
@@ -46,11 +47,39 @@ class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
         binding.tvUserName.setOnClickListener {
             logout()
         }
+        toDetails()
     }
 
     private fun logout(){
         auth.signOut()
-        findNavController().navigate(R.id.action_mainFragment_to_registerFragment)
+        findNavController().navigate(MainFragmentDirections.actionMainFragmentToRegisterFragment())
+    }
+
+    private fun toDetails(){
+        linksAdapter.apply {
+            setOnItemClickListener{ user,_ ->
+
+                db.child("Users").addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        for (ds in dataSnapshot.children) {
+                            val users: User? = ds.getValue(User::class.java)
+                            binding.tvUserName.text = users?.email.toString()
+                            if(users?.email == user.email){
+                                val userInfo = User(users.userName)
+                                findNavController().navigate(MainFragmentDirections.actionMainFragmentToChatFragment(
+                                    userInfo
+                                ))
+                            }
+                        }
+                    }
+                    override fun onCancelled(error: DatabaseError) {
+                        Log.w("FirebaseDatabase", "Error reading data from database", error.toException())
+                    }
+                })
+
+
+            }
+        }
     }
 
     private fun setupRecycler() {

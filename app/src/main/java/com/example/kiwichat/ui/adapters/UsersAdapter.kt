@@ -41,12 +41,10 @@ class UsersAdapter :
                 tvUser.text = string
             }
 
-            binding.tvUser.setOnClickListener {
+            binding.mainLayout.setOnClickListener {
                 itemClickListener.invoke(model!!, absoluteAdapterPosition)
             }
-
         }
-
     }
 
     fun setOnItemClickListener(clickListener: (User, Int) -> Unit) {

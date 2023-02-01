@@ -29,7 +29,6 @@ class SignInFragment : BaseFragment<FragmentSignInBinding>(FragmentSignInBinding
     override fun viewCreated() {
         auth = Firebase.auth
 
-
         binding.etEmailImpl.doOnTextChanged { text, start, before, count ->
             binding.btnSignIn.visibility = View.VISIBLE
         }
@@ -51,7 +50,7 @@ class SignInFragment : BaseFragment<FragmentSignInBinding>(FragmentSignInBinding
                     auth.signInWithEmailAndPassword(email,password).await()
                     withContext(Dispatchers.Main){
                         checkLoggedInState()
-                        findNavController().navigate(R.id.action_signInFragment_to_mainFragment)
+                        findNavController().navigate(SignInFragmentDirections.actionSignInFragmentToMainFragment())
                     }
                 }catch (e:Exception){
                     withContext(Dispatchers.Main){

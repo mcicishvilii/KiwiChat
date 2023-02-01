@@ -47,7 +47,7 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>(FragmentRegisterB
         }
 
         binding.tvSignin.setOnClickListener {
-            findNavController().navigate(R.id.action_registerFragment_to_signInFragment)
+            findNavController().navigate(RegisterFragmentDirections.actionRegisterFragmentToSignInFragment())
         }
     }
 
@@ -60,7 +60,7 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>(FragmentRegisterB
     private fun ifLoggedIn(){
         val user = Firebase.auth.currentUser
         if (user != null) {
-            findNavController().navigate(R.id.action_registerFragment_to_mainFragment)
+            findNavController().navigate(RegisterFragmentDirections.actionRegisterFragmentToMainFragment())
         } else {
 //            findNavController().navigate(R.id.action_registerFragment_to_signInFragment)
         }
