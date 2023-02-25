@@ -41,6 +41,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
         getData()
         setupRecycler()
         populateList()
+        Log.d(TAG,listOfUsers.toString())
     }
 
     override fun listeners() {
@@ -57,15 +58,14 @@ class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
 
     private fun toDetails(){
         linksAdapter.apply {
-            setOnItemClickListener{ user,_ ->
-
+            setOnItemClickListener{ userFromList,_ ->
                 db.child("Users").addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
                         for (ds in dataSnapshot.children) {
-                            val users: User? = ds.getValue(User::class.java)
-                            binding.tvUserName.text = users?.email.toString()
-                            if(users?.email == user.email){
-                                val userInfo = User(users.userName)
+                            val user: User? = ds.getValue(User::class.java)
+                            binding.tvUserName.text = user?.email.toString()
+                            if(user?.email == userFromList.email){
+                                val userInfo = User(user.userName)
                                 findNavController().navigate(MainFragmentDirections.actionMainFragmentToChatFragment(
                                     userInfo
                                 ))
@@ -76,8 +76,6 @@ class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
                         Log.w("FirebaseDatabase", "Error reading data from database", error.toException())
                     }
                 })
-
-
             }
         }
     }
@@ -96,32 +94,36 @@ class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
 
 
     private fun getData(){
-
-        lifecycleScope.launch{
-            db.child("Users").addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    for (ds in dataSnapshot.children) {
-                        val users: User? = ds.getValue(User::class.java)
-                        binding.tvUserName.text = users?.email.toString()
-                    }
-                }
-                override fun onCancelled(error: DatabaseError) {
-                    Log.w("FirebaseDatabase", "Error reading data from database", error.toException())
-                }
-            })
-        }
+//
+//        lifecycleScope.launch{
+//
+//            db.child("Users").addListenerForSingleValueEvent(object : ValueEventListener {
+//                override fun onDataChange(dataSnapshot: DataSnapshot) {
+//                    for (ds in dataSnapshot.children) {
+//                        val users: User? = ds.getValue(User::class.java)
+//                        binding.tvUserName.text = users?.email.toString()
+//                    }
+//                }
+//                override fun onCancelled(error: DatabaseError) {
+//                    Log.w("FirebaseDatabase", "Error reading data from database", error.toException())
+//                }
+//            })
+//        }
     }
 
     private fun populateList(){
         lifecycleScope.launch{
             db.child("Users").addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    listOfUsers.clear()
                     for (ds in dataSnapshot.children) {
                         val users: User? = ds.getValue(User::class.java)
-//                        binding.tvUserName.text = users?.email.toString()
-                        listOfUsers.add(users!!)
-                        linksAdapter.submitList(listOfUsers)
+
+                        if(auth.currentUser?.uid != users?.uid){
+                            listOfUsers.add(users!!)
+                        }
                     }
+                    linksAdapter.submitList(listOfUsers)
                 }
                 override fun onCancelled(error: DatabaseError) {
                     Log.w("FirebaseDatabase", "Error reading data from database", error.toException())

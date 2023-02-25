@@ -39,18 +39,25 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>(FragmentRegisterB
 
 
     override fun listeners() {
+        registerUser()
+        navigateToSignIn()
+
+    }
+
+
+    private fun navigateToSignIn(){
+        binding.tvSignin.setOnClickListener {
+            findNavController().navigate(RegisterFragmentDirections.actionRegisterFragmentToSignInFragment())
+        }
+    }
+    private fun registerUser(){
         binding.btnNext.setOnClickListener {
             val email = binding.etEmailImpl.text.toString()
             val password = binding.etPasswordImpl.text.toString()
             val username = binding.etUserNameImpl.text.toString()
             RegisterUser(username,email,password)
         }
-
-        binding.tvSignin.setOnClickListener {
-            findNavController().navigate(RegisterFragmentDirections.actionRegisterFragmentToSignInFragment())
-        }
     }
-
     private fun checkVisibility(){
         binding.etEmailImpl.doOnTextChanged { text, start, before, count ->
             binding.btnNext.visibility = View.VISIBLE
@@ -71,18 +78,11 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>(FragmentRegisterB
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     // Sign up success, update UI with the signed-in user's information
+//                    val user = FirebaseAuth.getInstance().currentUser
 
-                    val user = FirebaseAuth.getInstance().currentUser
-
-                    val userForDb = User(
-                        username,
-                        email,
-                        password
-                    )
-                    writeNewUser(userForDb)
+                    writeNewUser(username,email,auth.currentUser?.uid!!)
                     findNavController().navigate(R.id.action_registerFragment_to_mainFragment)
                 } else {
-                    // If sign in fails, display a message to the user.
                     Log.w("FirebaseAuth", "createUserWithEmail:failure", task.exception)
                     Toast.makeText(requireContext(), "Authentication failed.",
                         Toast.LENGTH_SHORT).show()
@@ -90,9 +90,10 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>(FragmentRegisterB
             }
     }
 
-    fun writeNewUser(user:User) {
+    fun writeNewUser(name:String,email:String,uid:String) {
         db =  Firebase.database.reference
-        db.child("Users").child(user.userName).setValue(user)
+        val dbUser = User(uid,name,email)
+        db.child("Users").child(uid).setValue(dbUser )
     }
 
 

@@ -51,8 +51,6 @@ class UsersAdapter :
         itemClickListener = clickListener
     }
 }
-
-
 class LinksDiffCallback : DiffUtil.ItemCallback<User>() {
     override fun areItemsTheSame(
         oldItem: User,
