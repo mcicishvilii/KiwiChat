@@ -2,11 +2,13 @@ package com.example.kiwichat.ui.main
 
 
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.kiwichat.R
 import com.example.kiwichat.common.BaseFragment
+import com.example.kiwichat.data.Messages
 import com.example.kiwichat.data.User
 import com.example.kiwichat.databinding.FragmentMainBinding
 import com.example.kiwichat.ui.adapters.UsersAdapter
@@ -64,16 +66,21 @@ class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
                         for (ds in dataSnapshot.children) {
                             val user: User? = ds.getValue(User::class.java)
                             binding.tvUserName.text = user?.email.toString()
-                            if(user?.email == userFromList.email){
-                                val userInfo = User(user.userName)
-                                findNavController().navigate(MainFragmentDirections.actionMainFragmentToChatFragment(
-                                    userInfo
-                                ))
+                            try{
+                                if(user?.email == userFromList.email){
+                                    val userInfo = Messages(user.uid,user.userName)
+                                    findNavController().navigate(MainFragmentDirections.actionMainFragmentToChatFragment(
+                                        userInfo
+                                    ))
+                                }
+                            }catch (e:Exception){
+                                Log.d(TAG,e.message.toString())
                             }
+
                         }
                     }
                     override fun onCancelled(error: DatabaseError) {
-                        Log.w("FirebaseDatabase", "Error reading data from database", error.toException())
+                        Log.d(TAG, "Error reading data from database", error.toException())
                     }
                 })
             }

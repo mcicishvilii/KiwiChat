@@ -47,8 +47,8 @@
         android:label="fragment_chat"
         tools:layout="@layout/fragment_chat" >
         <argument
-            android:name="info"
-            app:argType="com.example.kiwichat.data.User"
+            android:name="userInfo"
+            app:argType="com.example.kiwichat.data.Messages"
             app:nullable="true" />
     </fragment>
 </navigation>
