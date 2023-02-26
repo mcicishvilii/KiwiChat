@@ -1,6 +1,7 @@
 package com.example.kiwichat.ui.chat
 
 import MessagesAdapter
+import android.widget.Toast
 
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -44,6 +45,10 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::infl
         senderRoom = receiverUid + senderUid
         receiverRoom = senderUid + receiverUid
 
+//        binding.tvChatterName.text = args.userInfo
+
+
+
         setupRecycler()
         displayMessage()
 
@@ -58,6 +63,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::infl
         binding.rvMessages.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         binding.rvMessages.adapter = messagesAdapter
+
     }
 
     private fun displayMessage() {
@@ -70,6 +76,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::infl
                         messagesList.add(message!!)
                     }
                     messagesAdapter.notifyDataSetChanged()
+                        binding.rvMessages.scrollToPosition(messagesList.size - 1)
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -83,11 +90,16 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::infl
             val messageText = binding.etMessageBox.text.toString()
             val message = Messages(senderUid!!, messageText)
 
-            db.child("Chats").child(senderRoom!!).child("messages").push()
-                .setValue(message).addOnSuccessListener {
-                    db.child("Chats").child(receiverRoom!!).child("messages").push()
-                        .setValue(message)
-                }
+            if (messageText.isNotEmpty()){
+                db.child("Chats").child(senderRoom!!).child("messages").push()
+                    .setValue(message).addOnSuccessListener {
+                        db.child("Chats").child(receiverRoom!!).child("messages").push()
+                            .setValue(message)
+                    }
+
+            }else{
+            }
+
             binding.etMessageBox.setText("")
         }
     }

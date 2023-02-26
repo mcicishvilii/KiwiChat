@@ -6,13 +6,37 @@
     android:layout_height="match_parent"
     tools:context=".ui.chat.ChatFragment">
 
+
+    <ImageView
+
+        android:id="@+id/btn_backArrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:src="@drawable/baseline_arrow_back_24"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:textColor="@color/white"
+        android:id="@+id/tv_chatterName"
+        app:layout_constraintBottom_toTopOf="@id/rvMessages"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/btn_backArrow"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvMessages"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="5dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_backArrow"
         app:layout_constraintBottom_toTopOf="@id/horizontal_guideline"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -48,7 +72,8 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="10dp"
-        android:src="@color/black"
+        android:src="@drawable/baseline_send_24"
+
         app:layout_constraintStart_toEndOf="@id/messagebox_guideline"
         app:layout_constraintTop_toBottomOf="@id/horizontal_guideline"
         app:layout_constraintBottom_toBottomOf="parent"
