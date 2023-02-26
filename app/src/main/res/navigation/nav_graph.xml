@@ -16,6 +16,7 @@
         <action
             android:id="@+id/action_mainFragment_to_chatFragment"
             app:destination="@id/chatFragment" />
+
     </fragment>
 
     <fragment
@@ -48,7 +49,10 @@
         tools:layout="@layout/fragment_chat" >
         <argument
             android:name="userInfo"
-            app:argType="com.example.kiwichat.data.Messages"
+            app:argType="com.example.kiwichat.data.User"
             app:nullable="true" />
+        <action
+            android:id="@+id/action_chatFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
     </fragment>
 </navigation>

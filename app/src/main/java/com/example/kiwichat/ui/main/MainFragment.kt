@@ -68,7 +68,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
                             binding.tvUserName.text = user?.email.toString()
                             try{
                                 if(user?.email == userFromList.email){
-                                    val userInfo = Messages(user.uid,user.userName)
+                                    val userInfo = User(user.uid,user.userName)
                                     findNavController().navigate(MainFragmentDirections.actionMainFragmentToChatFragment(
                                         userInfo
                                     ))

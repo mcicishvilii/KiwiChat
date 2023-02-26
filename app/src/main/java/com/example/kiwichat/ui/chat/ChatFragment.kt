@@ -2,6 +2,7 @@ package com.example.kiwichat.ui.chat
 
 import MessagesAdapter
 import android.widget.Toast
+import androidx.navigation.fragment.findNavController
 
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -39,13 +40,13 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::infl
     val senderUid = FirebaseAuth.getInstance().currentUser?.uid
 
     override fun viewCreated() {
-        val receiverUid = args.userInfo!!.id
+        val receiverUid = args.userInfo!!.uid
         messagesList = mutableListOf()
         db = Firebase.database.reference
         senderRoom = receiverUid + senderUid
         receiverRoom = senderUid + receiverUid
 
-//        binding.tvChatterName.text = args.userInfo
+        binding.tvChatterName.text = args.userInfo!!.userName
 
 
 
@@ -56,6 +57,13 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::infl
 
     override fun listeners() {
         sendMessage()
+        goBack()
+    }
+
+    private fun goBack() {
+        binding.btnBackArrow.setOnClickListener{
+            findNavController().navigate(ChatFragmentDirections.actionChatFragmentToMainFragment())
+        }
     }
 
     private fun setupRecycler() {
